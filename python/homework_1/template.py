@@ -15,7 +15,7 @@ def t1(number):
     Пример: -5 -> 0
 
     """
-    pass
+    return (number + 20 - number % 20 if number % 20 != 0 else number)
 
 
 def t2(string):
@@ -24,7 +24,7 @@ def t2(string):
 
     Пример: `abc abc abc` -> `cba cba cba`
     """
-    pass
+    return (' '.join([word[::-1] for word in string.split()]))
 
 
 def t3(dictionary):
@@ -32,14 +32,15 @@ def t3(dictionary):
     На вход подается словарь. Преорбазуйте его в строку по следующему шаблону 'key: value; key: value' и так далее
 
     """
-    pass
+    return '; '.join(f'{key}: {value}' for key, value in dictionary.items())
+
 
 
 def t4(string, sub_string):
     """
     проверить есть ли в строке инвертированная подстрока
     """
-    pass
+    return sub_string[::-1] in string
 
 
 def t5(strings):
@@ -47,7 +48,15 @@ def t5(strings):
     На вход подается список строк,
     Отфильтруйте список строк, оставив только строки в формате: `x y z x*y*z`, где x,y,z - целые положительные числа
     """
-    pass
+    result = []
+    for string in strings:
+        try:
+            x, y, z, proizv = [int(i) for i in string.split()]
+            if f'{x} {y} {z} {x * y * z}' == string and x * y * z >= 0:
+                result += [string]
+        except:
+            pass
+    return result
 
 
 def t6(string):
@@ -60,7 +69,12 @@ def t6(string):
     "#######"       ==>  ""
     ""              ==>  ""
     """
-    pass
+    for j in string:
+        if j == '#':
+            string.find('#')
+            string = string[:string.find('#') - 1] + string[string.find('#') + 1:]
+    string = string.replace('#', '')
+    return string
 
 
 def t7(lst):
@@ -69,7 +83,11 @@ def t7(lst):
 
     Например: [4,5,7,5,4,8] -> 15 потому что 7 и 8 уникальны
     """
-    pass
+    uniq_sum = 0
+    for i in lst:
+        if lst.count(i) == 1:
+            uniq_sum += i
+    return uniq_sum
 
 
 def t8(string):
@@ -78,7 +96,13 @@ def t8(string):
 
     gh12cdy695m1 -> 695
     """
-    pass
+    new = ''
+    for i in string:
+        if i.isnumeric():
+            new += ''.join([i])
+        else:
+            new += ' '
+    return int(max(i for i in new.split(' ')))
 
 
 def t9(number):
@@ -87,7 +111,7 @@ def t9(number):
 
     Т.е. для числа 5 верните `00005`
     """
-    pass
+    return '0' * (5 - len(str(number))) + str(number)
 
 
 def t10(string):
@@ -108,7 +132,16 @@ def t10(string):
            G  <-- вывод
 
     """
-    pass
+    string = [x for x in string]
+
+    colors = ['B', 'G', 'R']
+
+    while len(string) != 1:
+        for i in range(len(string) - 1):
+            if string[i] != string[i + 1]:
+                string[i] = [x for x in colors if x not in string[i:i + 2]][0]
+        string.pop()
+    return string[0]
 
 
 def t11(lst):
@@ -119,7 +152,11 @@ def t11(lst):
     [1,12,3,3,6,3,1] = 2
     [10,20,30,40] = -1
     """
-    pass
+    index = -1
+    for i in range(len(lst)):
+        if sum(x for x in lst[0:i]) == sum(x for x in lst[i + 1::]):
+            index = i
+    return index
 
 
 def t12(lst):
@@ -131,7 +168,15 @@ def t12(lst):
     Выход: [`84951234567`]
 
     """
-    pass
+    import re
+    numbers = []
+    numbers_upd = []
+    for i in lst:
+        numbers += re.findall(r'[\+]?[78]?[\s(-]?\d{3}[\s' ')-]?\d{3}[\s' ')-]?[\s]?\d{2}[' ')-]?\d{2}[' ')-]?', i)
+    for j in numbers:
+        j = j.replace('+7', '8').replace('-', '').replace(' ', '').replace('(', '').replace(')', '')
+        numbers_upd += [j]
+    return numbers_upd
 
 
 def t13(number_1, number_2):
@@ -141,7 +186,14 @@ def t13(number_1, number_2):
        +208
         4416
     """
-    pass
+    result = ''
+    if len(str(number_1)) > len(str(number_2)):
+        number_2 = '0' * (len(str(number_1)) - len(str(number_2))) + str(number_2)
+    else:
+        number_1 = '0' * (len(str(number_2)) - len(str(number_1))) + str(number_1)
+    for i, j in zip(str(number_1), str(number_2)):
+        result += str(int(i) + int(j))
+    return int(result)
 
 
 def t14(string):
@@ -161,7 +213,27 @@ def t14(string):
         10 - 5 -> Ten Minus Five
         2 = 2  -> Two Equals Two
     """
-    pass
+    changed_value = {'+': 'Plus ',
+                     '-': 'Minus ',
+                     '*': 'Times ',
+                     '/': 'Divided By ',
+                     '**': 'To The Power Of ',
+                     '=': 'Equals ',
+                     '!=': 'Does Not Equal ',
+                     '1': 'One',
+                     '2': 'Two',
+                     '3': 'Three',
+                     '4': 'Four',
+                     '5': 'Five',
+                     '6': 'Six',
+                     '7': 'Seven',
+                     '8': 'Eight',
+                     '9': 'Nine',
+                     '10': 'Ten'}
+
+    for i in string.split():
+        string = string.replace(i, changed_value[i])
+    return ' '.join(string.split())
 
 
 def t15(lst):
@@ -173,5 +245,7 @@ def t15(lst):
     [ 7, 8, 9 ]]
     Результат: 30
     """
-    pass
-
+    result = 0
+    for row in range(len(lst)):
+        result += lst[row][row] + lst[row][len(lst) - row - 1]
+    return result
