@@ -20,6 +20,7 @@ def start(update, context):
     """Send a message when the command /start is issued."""
 
     update.message.reply_text('Welcome to my weather API bot')
+    update.message.reply_text('Send me /weather ')
 
 
 def get_weather_start(update, context):
@@ -35,16 +36,28 @@ def coordinates_handler(update, context):
     update.message.reply_text('Thank you. You location is captured', reply_markup=reply_markup)
     # find and save location property in update
     # you can use `context.user_data["location"]` to save user data
+    context.user_data["location"] = update.message.location
     return 1
 
 
 def weather_handler(update, context):
+    lat = context.user_data["location"]['latitude']   # updated
+    lon = context.user_data["location"]['longitude']  # updated
     if update.message.text == WEATHER_CONVERSATION_COMMANDS[0]:
         update.message.reply_text('current weather', reply_markup=telegram.ReplyKeyboardRemove())
         # TODO: send a current weather from yandex there
+        weather_reply = WeatherAPI(YANDEX_WEATHER_API_KEY).get_current_weather(lat=lat, lon=lon)
+        update.message.reply_text('\n'.join([f'{key}: {value}' for (key, value) in weather_reply.items()]))
+
+
     elif update.message.text == WEATHER_CONVERSATION_COMMANDS[1]:
         update.message.reply_text('forecast', reply_markup=telegram.ReplyKeyboardRemove())
         # TODO: send a forecast of weather from yandex there
+        weather_reply_dict = WeatherAPI(YANDEX_WEATHER_API_KEY).get_forecast(lat=lat, lon=lon)
+        weather_reply = []
+        for day_forecast in weather_reply_dict:
+            weather_reply.append(', '.join([f'{key}: {value}' for (key, value) in day_forecast.items()]))
+        update.message.reply_text('\n'.join(weather_reply))
     return ConversationHandler.END
 
 
@@ -58,7 +71,7 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
-def start_telegram_bot():
+def start_telegram_bot() -> object:
     updater = Updater(TELEGRAM_KEY, use_context=True)
     dp = updater.dispatcher
     # setup commands
