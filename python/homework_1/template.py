@@ -96,13 +96,11 @@ def t8(string):
 
     gh12cdy695m1 -> 695
     """
-    new = ''
-    for i in string:
-        if i.isnumeric():
-            new += ''.join([i])
-        else:
-            new += ' '
-    return int(max(i for i in new.split(' ')))
+    import re
+    s = re.findall(r'\d+', string)
+    for i in range(len(s)):
+        s[i] = int(s[i])
+    return max(s)
 
 
 def t9(number):
@@ -156,6 +154,7 @@ def t11(lst):
     for i in range(len(lst)):
         if sum(x for x in lst[0:i]) == sum(x for x in lst[i + 1::]):
             index = i
+            break
     return index
 
 
@@ -249,3 +248,5 @@ def t15(lst):
     for row in range(len(lst)):
         result += lst[row][row] + lst[row][len(lst) - row - 1]
     return result
+
+
