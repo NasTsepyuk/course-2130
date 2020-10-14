@@ -69,12 +69,13 @@ def t6(string):
     "#######"       ==>  ""
     ""              ==>  ""
     """
-    for j in string:
-        if j == '#':
-            string.find('#')
-            string = string[:string.find('#') - 1] + string[string.find('#') + 1:]
-    string = string.replace('#', '')
-    return string
+    result = ''
+    for i in string:
+        if i == "#":
+            result = result[:-1]
+        else:
+            result += i
+    return result
 
 
 def t7(lst):
